@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Peminjaman Buku</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Sistem Peminjaman Buku</h1>
+    </header>
+
+    <main class="container">
+      <!-- Area Notifikasi / Pesan Status -->
+      <div id="message-container" class="message-box hidden"></div>
+
+      <!-- Section Pengguna -->
+      <section class="user-section card-box">
+        <h2>Identitas Pengguna</h2>
+        <div class="form-group">
+          <label for="user-id">User ID:</label>
+          <input
+            type="text"
+            id="user-id"
+            placeholder="Masukkan User ID (contoh: student1)"
+          />
+          <button type="button" id="btn-load-loans">
+            Muat Riwayat Peminjaman
+          </button>
+        </div>
+      </section>
+
+      <!-- Section Katalog Buku -->
+      <section class="books-section">
+        <h2>Daftar Buku</h2>
+        <div id="books-list" class="books-grid">
+          <p class="loading-text">Memuat daftar buku...</p>
+        </div>
+      </section>
+
+      <!-- Section Riwayat Peminjaman -->
+      <section class="loans-section">
+        <h2>Riwayat Peminjaman Pengguna</h2>
+        <div id="loans-list" class="loans-container">
+          <p class="info-text">
+            Masukkan User ID dan klik "Muat Riwayat Peminjaman" untuk melihat
+            data.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

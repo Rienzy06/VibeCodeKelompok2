@@ -22,5 +22,13 @@
     "borrowDate": "2026-09-19T05:29:16.733Z",
     "dueDate": "2026-09-26T05:29:16.733Z",
     "status": "active"
+  },
+  {
+    "loanId": "loan-1789811509007",
+    "userId": "student2",
+    "bookId": "b2",
+    "borrowDate": "2026-09-19T09:51:49.007Z",
+    "dueDate": "2026-09-26T09:51:49.007Z",
+    "status": "active"
   }
 ]
