@@ -1,0 +1,26 @@
+[
+  {
+    "loanId": "loan-1789795376362",
+    "userId": "student1",
+    "bookId": "b1",
+    "borrowDate": "2026-09-19T05:22:56.362Z",
+    "dueDate": "2026-09-26T05:22:56.362Z",
+    "status": "active"
+  },
+  {
+    "loanId": "loan-1789795646696",
+    "userId": "student1",
+    "bookId": "b2",
+    "borrowDate": "2026-09-19T05:27:26.696Z",
+    "dueDate": "2026-09-26T05:27:26.696Z",
+    "status": "active"
+  },
+  {
+    "loanId": "loan-1789795756733",
+    "userId": "student1",
+    "bookId": "b3",
+    "borrowDate": "2026-09-19T05:29:16.733Z",
+    "dueDate": "2026-09-26T05:29:16.733Z",
+    "status": "active"
+  }
+]
