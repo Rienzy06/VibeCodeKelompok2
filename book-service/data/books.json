@@ -1,0 +1,20 @@
+[
+  {
+    "id": "b1",
+    "title": "Pemrograman Web dengan Node.js",
+    "author": "Penulis A",
+    "status": "available"
+  },
+  {
+    "id": "b2",
+    "title": "Arsitektur Microservices",
+    "author": "Penulis B",
+    "status": "available"
+  },
+  {
+    "id": "b3",
+    "title": "Panduan REST API",
+    "author": "Penulis C",
+    "status": "borrowed"
+  }
+]
