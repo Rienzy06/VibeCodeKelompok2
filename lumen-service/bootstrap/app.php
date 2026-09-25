@@ -27,6 +27,10 @@ $app = new Laravel\Lumen\Application(
 
  $app->withEloquent();
 
+ $app->middleware([
+    App\Http\Middleware\Cors::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
