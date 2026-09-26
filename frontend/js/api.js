@@ -56,6 +56,10 @@ async function createLoan(userId, bookId) {
         throw new Error("Buku ini tidak tersedia untuk dipinjam.");
       }
 
+      if (result.code === "RESOURCE_NOT_FOUND") {
+        throw new Error("Buku yang dipilih tidak ditemukan.");
+      }
+
       throw new Error(result.message || "Gagal melakukan peminjaman buku.");
     }
 
