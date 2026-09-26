@@ -30,6 +30,13 @@ class LoanController extends Controller
             ], 400);
         }
 
+        if (!is_numeric($bookId) || (int) $bookId <= 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'bookId harus berupa angka positif.',
+            ], 400);
+        }
+
         $activeLoans = Loan::where('user_id', $userId)
             ->where('status', 'active')
             ->count();
