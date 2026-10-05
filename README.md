@@ -27,29 +27,6 @@ Lumen Service
 MySQL Database
 ```
 
-## Cara Menjalankan
-
-### 1. Jalankan Database
-
-Buka XAMPP, lalu klik **Start** pada MySQL.
-
-### 2. Jalankan Backend
-
-Buka terminal VS Code dan masuk ke folder backend:
-
-```bash
-cd lumen-service
-```
-
-Jalankan server:
-
-```bash
-php -S localhost:8000 -t public
-```
-
-### 3. Jalankan Frontend
-
-Buka folder `frontend`, klik kanan file `index.html`, lalu pilih **Open with Live Server**.
 
 ## Endpoint API
 
