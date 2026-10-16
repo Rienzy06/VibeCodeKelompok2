@@ -3,52 +3,233 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#254b39" />
+    <meta
+      name="description"
+      content="Sistem peminjaman buku untuk mencari bacaan dan memantau riwayat peminjaman."
+    />
     <title>Sistem Peminjaman Buku</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
+
   <body>
-    <header>
-      <h1>Sistem Peminjaman Buku</h1>
+    <header class="site-header">
+      <div class="masthead">
+        <a
+          class="brand"
+          href="#main-content"
+          aria-label="Sistem Peminjaman Buku, halaman utama"
+        >
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path
+                d="M5.5 7.5c4.2-.9 7.7 0 10.5 2.2v16c-2.8-2.2-6.3-3.1-10.5-2.2v-16Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M26.5 7.5c-4.2-.9-7.7 0-10.5 2.2v16c2.8-2.2 6.3-3.1 10.5-2.2v-16Z"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9 12.2c2-.2 3.7.2 5.1 1.1M9 16c2-.2 3.7.2 5.1 1.1M23 12.2c-2-.2-3.7.2-5.1 1.1M23 16c-2-.2-3.7.2-5.1 1.1"
+                stroke="currentColor"
+                stroke-width="1.35"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <span class="brand-eyebrow">RUANG BACA DIGITAL</span>
+            <span class="brand-name">Sistem Peminjaman Buku</span>
+          </span>
+        </a>
+
+        <div class="header-meta" aria-label="Jenis layanan">
+          <span class="header-meta-dot" aria-hidden="true"></span>
+          <span>Katalog &amp; peminjaman</span>
+        </div>
+      </div>
     </header>
 
-    <main class="container">
-      <!-- Area Notifikasi / Pesan Status -->
-      <div id="message-container" class="message-box hidden"></div>
+    <main id="main-content" class="container">
+      <div
+        id="message-container"
+        class="message-box hidden"
+        role="status"
+        aria-live="polite"
+      ></div>
 
-      <!-- Section Pengguna -->
-      <section class="user-section card-box">
-        <h2>Identitas Pengguna</h2>
-        <div class="form-group">
-          <label for="user-id">User ID:</label>
-          <input
-            type="text"
-            id="user-id"
-            placeholder="Masukkan User ID (contoh: student1)"
-          />
-          <button type="button" id="btn-load-loans">
-            Muat Riwayat Peminjaman
-          </button>
+      <!-- Form login. ID dipertahankan agar tetap cocok dengan app.js. -->
+      <section
+        id="login-section"
+        class="login-layout"
+        aria-labelledby="login-page-title"
+      >
+        <div class="login-story">
+          <p class="eyebrow eyebrow-light">BACA. TEMUKAN. KEMBALI.</p>
+          <h2 id="login-page-title">Selalu ada cerita baru untuk ditemukan.</h2>
+          <p class="login-story-copy">
+            Masuk untuk menjelajahi koleksi buku, mengajukan peminjaman, dan
+            melihat kembali bacaan yang pernah kamu pinjam.
+          </p>
+
+          <div class="login-notes" aria-label="Fitur layanan">
+            <div class="login-note">
+              <span class="note-number">01</span>
+              <span>Jelajahi koleksi buku</span>
+            </div>
+            <div class="login-note">
+              <span class="note-number">02</span>
+              <span>Pinjam buku dengan mudah</span>
+            </div>
+            <div class="login-note">
+              <span class="note-number">03</span>
+              <span>Pantau riwayat peminjaman</span>
+            </div>
+          </div>
+          <span class="story-edition">EDISI DIGITAL <span>—</span> 01</span>
         </div>
-      </section>
 
-      <!-- Section Katalog Buku -->
-      <section class="books-section">
-        <h2>Daftar Buku</h2>
-        <div id="books-list" class="books-grid">
-          <p class="loading-text">Memuat daftar buku...</p>
-        </div>
-      </section>
+        <div class="login-card">
+          <div class="login-card-heading">
+            <p class="eyebrow">AKUN PENGGUNA</p>
+            <h3>Selamat datang kembali.</h3>
+            <p>Gunakan akun yang sudah terdaftar untuk melanjutkan.</p>
+          </div>
 
-      <!-- Section Riwayat Peminjaman -->
-      <section class="loans-section">
-        <h2>Riwayat Peminjaman Pengguna</h2>
-        <div id="loans-list" class="loans-container">
-          <p class="info-text">
-            Masukkan User ID dan klik "Muat Riwayat Peminjaman" untuk melihat
-            data.
+          <form id="login-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Masukkan username"
+                autocomplete="username"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Masukkan password"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <button type="submit" id="btn-login">
+              <span>Masuk ke akun</span>
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M4 10h11M10 5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </form>
+          <p class="login-footnote">
+            Akses layanan perpustakaan dalam satu tempat.
           </p>
         </div>
       </section>
+
+      <!-- Aplikasi setelah login. ID utama dan ID anak dipertahankan untuk app.js. -->
+      <section
+        id="app-section"
+        class="hidden"
+        aria-label="Beranda peminjaman buku"
+      >
+        <div class="page-intro">
+          <div>
+            <p class="eyebrow">RUANG BACA / BERANDA</p>
+            <h2>Temukan bacaan berikutnya.</h2>
+            <p class="page-intro-copy">
+              Jelajahi koleksi yang tersedia dan kelola peminjamanmu di sini.
+            </p>
+          </div>
+          <span class="intro-index" aria-hidden="true"
+            >01 <span>/</span> 03</span
+          >
+        </div>
+
+        <section class="account-strip" aria-labelledby="account-title">
+          <div class="account-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="8"
+                r="3.4"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <path
+                d="M5.5 20c.4-3.5 2.8-5.5 6.5-5.5s6.1 2 6.5 5.5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="account-copy">
+            <p class="eyebrow" id="account-title">AKUN AKTIF</p>
+            <p class="account-name-line">
+              Login sebagai <strong id="current-username"></strong>
+            </p>
+          </div>
+          <button type="button" id="btn-logout" class="button-secondary">
+            Keluar <span aria-hidden="true">↗</span>
+          </button>
+        </section>
+
+        <section class="books-section" aria-labelledby="books-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">PILIHAN KOLEKSI</p>
+              <h2 id="books-title">Daftar buku</h2>
+            </div>
+            <p class="section-aside">Temukan buku yang ingin kamu baca.</p>
+          </div>
+
+          <div id="books-list" class="books-grid">
+            <p class="loading-text">Memuat daftar buku...</p>
+          </div>
+        </section>
+
+        <section class="loans-section" aria-labelledby="loans-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">AKTIVITAS AKUN</p>
+              <h2 id="loans-title">Riwayat peminjaman</h2>
+            </div>
+            <p class="section-aside">
+              Pantau buku yang pernah atau sedang dipinjam.
+            </p>
+          </div>
+
+          <div id="loans-list" class="loans-container">
+            <p class="info-text">
+              Riwayat peminjaman akan ditampilkan di sini.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <footer class="site-footer">
+        <span>RUANG BACA DIGITAL</span>
+        <span>Sistem Peminjaman Buku</span>
+      </footer>
     </main>
 
     <script src="js/api.js"></script>
