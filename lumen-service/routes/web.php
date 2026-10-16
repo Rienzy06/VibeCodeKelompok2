@@ -12,11 +12,3 @@ $router->get('/test-books', function () {
         'data' => \App\Models\Book::all(),
     ]);
 });
-
-$router->get('/api/books', 'BookController@index');
-
-$router->get('/api/books/{id}', 'BookController@show');
-
-$router->post('/api/loans', 'LoanController@store');
-
-$router->get('/api/loans/user/{userId}', 'LoanController@index');
