@@ -10,23 +10,54 @@ use Carbon\Carbon;
 
 class LoanController extends Controller
 {
+    // Mengambil peminjaman berdasarkan parameter userId di URL
     public function index($userId)
     {
         return response()->json([
             'status' => 'success',
             'data' => Loan::where('user_id', $userId)->get(),
         ]);
+    } // <-- Kurung kurawal penutup index() yang tadinya kurang tepat
+
+    /**
+     * Mengambil riwayat peminjaman pengguna yang sedang login.
+     */
+    public function myLoans(Request $request)
+    {
+        $userId = $request->attributes->get('authenticated_user_id');
+
+        if (!$userId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Autentikasi pengguna diperlukan.',
+            ], 401);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => Loan::where('user_id', $userId)
+                ->orderBy('borrow_date', 'desc')
+                ->get(),
+        ], 200);
     }
 
     public function store(Request $request)
     {
-        $userId = $request->input('userId');
+        $userId = $request->attributes->get('authenticated_user_id');
         $bookId = $request->input('bookId');
 
-        if (!$userId || !$bookId) {
+        // Perbaikan validasi sesuai instruksi foto:
+        if (!$userId) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'userId dan bookId wajib diisi.',
+                'message' => 'Silakan login terlebih dahulu.',
+            ], 401);
+        }
+
+        if (!$bookId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'bookId wajib diisi.',
             ], 400);
         }
 
