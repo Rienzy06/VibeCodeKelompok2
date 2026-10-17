@@ -39,6 +39,32 @@ class BookSeeder extends Seeder
                 'author' => 'Fajar Nugraha',
                 'status' => 'available',
             ],
+            // 3 Buku Tambahan Baru:
+            [
+                'title' => 'Algoritma dan Pemrograman',
+                'author' => 'Ahmad Fauzi',
+                'status' => 'available',
+            ],
+            [
+                'title' => 'Jaringan Komputer Lanjut',
+                'author' => 'Siti Aminah',
+                'status' => 'available',
+            ],
+            [
+                'title' => 'Kecerdasan Buatan',
+                'author' => 'Eko Prasetyo',
+                'status' => 'available',
+            ],
+            [
+                'title' => 'Data Mining',
+                'author' => 'Dr. Hendra Gunawan',
+                'status' => 'available',
+            ],
+            [
+                'title' => 'Rekayasa Bisnis Proses',
+                'author' => 'Prof. Maya Indriani',
+                'status' => 'available',
+            ],
         ]);
     }
 }
