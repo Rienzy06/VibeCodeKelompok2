@@ -22,10 +22,12 @@ $router->group(['middleware' => 'auth.token'], function () use ($router) {
 $router->get('/books', 'BookController@index');
 $router->get('/books/{id}', 'BookController@show');
 
-// ==========================================
+// ========================================
 // PEMINJAMAN BUKU
-// ==========================================
+// ========================================
 
-$router->post('/loans', 'LoanController@store');
-$router->get('/loans/user/{userId}', 'LoanController@index');
-$router->get('/loans/me', 'LoanController@myLoans');
+$router->group(['middleware' => 'auth.token'], function () use ($router) {
+    $router->post('/loans', 'LoanController@store');
+    $router->get('/loans/user/{userId}', 'LoanController@index');
+    $router->get('/loans/me', 'LoanController@myLoans');
+});
