@@ -37,5 +37,5 @@ $router->group(['middleware' => 'auth.token'], function () use ($router) {
     $router->get('/loans/me', 'LoanController@myLoans');
 
     // Mengembalikan buku
-    $router->post('/loans{id}/return', 'LoanController@returnBook');
+    $router->post('/loans/{id}/return', 'LoanController@returnBook');
 });
