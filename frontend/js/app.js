@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentUsername = document.getElementById("current-username");
 
   // Elemen Form Register & Navigasi Toggle
-  const loginCardWrapper = document.getElementById("login-card-wrapper");
   const loginFormContainer = document.getElementById("login-form-container");
   const registerFormContainer = document.getElementById(
     "register-form-container",
@@ -28,9 +27,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const linkToRegister = document.getElementById("link-to-register");
   const linkToLogin = document.getElementById("link-to-login");
 
-  // Elemen buku dan peminjaman
+  // Elemen buku, pencarian, ringkasan, dan peminjaman
   const booksListContainer = document.getElementById("books-list");
   const loansListContainer = document.getElementById("loans-list");
+  const searchInput = document.getElementById("search-input");
+  const countActiveEl = document.getElementById("count-active");
+  const countReturnedEl = document.getElementById("count-returned");
+  const filterTabs = document.querySelectorAll(".filter-tab");
+
+  // Global Cache Data
+  let allBooksCache = [];
+  let allLoansCache = [];
+  let currentLoanFilter = "all";
 
   // ==========================================
   // 1.1. TOGGLE LOGIN <-> REGISTER
@@ -90,6 +98,49 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
+  // 1.3. LIVE SEARCH FILTER
+  // ==========================================
+
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const keyword = e.target.value.toLowerCase().trim();
+      const filteredBooks = allBooksCache.filter((book) => {
+        const title = (book.title || "").toLowerCase();
+        const author = (book.author || "").toLowerCase();
+        return title.includes(keyword) || author.includes(keyword);
+      });
+      renderBooks(filteredBooks, keyword !== "");
+    });
+  }
+
+  // ==========================================
+  // 1.4. FILTER STATUS PEMINJAMAN (TABS)
+  // ==========================================
+
+  filterTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      filterTabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentLoanFilter = tab.dataset.filter;
+      applyLoanFilterAndRender();
+    });
+  });
+
+  function applyLoanFilterAndRender() {
+    let filteredLoans = allLoansCache;
+    if (currentLoanFilter === "active") {
+      filteredLoans = allLoansCache.filter(
+        (l) => (l.status || "").toLowerCase() === "active",
+      );
+    } else if (currentLoanFilter === "returned") {
+      filteredLoans = allLoansCache.filter(
+        (l) => (l.status || "").toLowerCase() !== "active",
+      );
+    }
+    renderLoans(filteredLoans);
+  }
+
+  // ==========================================
   // 2. TAMPILAN LOGIN DAN APLIKASI
   // ==========================================
 
@@ -138,15 +189,17 @@ document.addEventListener("DOMContentLoaded", () => {
       passwordInput.value = "";
 
       showApp(user.username || username);
-      showMessage("Login berhasil.", "success");
+      showMessage("Login berhasil. Selamat datang di sistem.", "success");
     } catch (error) {
       clearToken();
       showLogin();
-
-      showMessage(error.message || "Login gagal.", "error");
+      showMessage(
+        error.message || "Login gagal. Periksa kembali kredensial Anda.",
+        "error",
+      );
     } finally {
       btnLogin.disabled = false;
-      btnLogin.textContent = "Login";
+      btnLogin.textContent = "Masuk ke Sistem";
     }
   });
 
@@ -189,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.ok && result.status === "success") {
           showMessage(
-            result.message || "Registrasi berhasil. Silakan login.",
+            result.message || "Registrasi berhasil. Silakan masuk.",
             "success",
           );
           registerForm.reset();
@@ -203,44 +256,46 @@ document.addEventListener("DOMContentLoaded", () => {
         showMessage(error.message || "Terjadi kesalahan pada server.", "error");
       } finally {
         btnRegister.disabled = false;
-        btnRegister.textContent = "Daftar Akun";
+        btnRegister.textContent = "Buat Akun Baru";
       }
     });
   }
 
   // ==========================================
-  // 4. LOGOUT
+  // 4. LOGOUT (DENGAN MODAL KONFIRMASI)
   // ==========================================
 
-  btnLogout.addEventListener("click", async () => {
-    hideMessage();
+  btnLogout.addEventListener("click", () => {
+    showConfirmModal(
+      "Keluar Sesi",
+      "Apakah Anda yakin ingin keluar dari akun Anda?",
+      async () => {
+        hideMessage();
+        btnLogout.disabled = true;
+        btnLogout.textContent = "Keluar...";
 
-    btnLogout.disabled = true;
-    btnLogout.textContent = "Memproses...";
+        try {
+          await logout();
+          showLogin();
 
-    try {
-      await logout();
+          currentUsername.textContent = "";
+          if (searchInput) searchInput.value = "";
+          allBooksCache = [];
+          allLoansCache = [];
+          updateCounterBadges(0, 0);
 
-      showLogin();
+          booksListContainer.innerHTML = `<p class="info-text">Silakan masuk untuk melihat daftar buku.</p>`;
+          loansListContainer.innerHTML = `<p class="info-text">Silakan masuk untuk melihat riwayat peminjaman.</p>`;
 
-      currentUsername.textContent = "";
-      booksListContainer.innerHTML = `
-        <p class="info-text">Silakan login untuk melihat daftar buku.</p>
-      `;
-
-      loansListContainer.innerHTML = `
-        <p class="info-text">
-          Silakan login untuk melihat riwayat peminjaman.
-        </p>
-      `;
-
-      showMessage("Logout berhasil.", "success");
-    } catch (error) {
-      showMessage(error.message || "Logout gagal.", "error");
-    } finally {
-      btnLogout.disabled = false;
-      btnLogout.textContent = "Logout";
-    }
+          showMessage("Sesi berhasil diakhiri.", "success");
+        } catch (error) {
+          showMessage(error.message || "Gagal keluar sesi.", "error");
+        } finally {
+          btnLogout.disabled = false;
+          btnLogout.textContent = "Keluar Sesi";
+        }
+      },
+    );
   });
 
   // ==========================================
@@ -269,20 +324,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
 
   async function loadBooks() {
-    booksListContainer.innerHTML = `
-      <p class="loading-text">Memuat daftar buku...</p>
-    `;
+    booksListContainer.innerHTML = `<p class="loading-text">Memuat data katalog buku...</p>`;
 
     try {
       const books = await getBooks();
-      renderBooks(books);
+      allBooksCache = Array.isArray(books) ? books : [];
+      renderBooks(allBooksCache);
     } catch (error) {
-      booksListContainer.innerHTML = `
-        <p class="empty-text">
-          Gagal memuat daftar buku.
-        </p>
-      `;
-
+      booksListContainer.innerHTML = `<p class="info-text">Gagal memuat katalog buku.</p>`;
       showMessage(error.message, "error");
     }
   }
@@ -291,10 +340,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // 7. MENAMPILKAN DAFTAR BUKU
   // ==========================================
 
-  function renderBooks(books) {
+  function renderBooks(books, isSearchFiltered = false) {
     if (!Array.isArray(books) || books.length === 0) {
       booksListContainer.innerHTML = `
-        <p class="empty-text">Belum ada buku yang tersedia.</p>
+        <div class="empty-state">
+          <p><strong>${isSearchFiltered ? "Pencarian tidak ditemukan." : "Belum ada koleksi buku yang tersedia."}</strong></p>
+        </div>
       `;
       return;
     }
@@ -310,31 +361,26 @@ document.addEventListener("DOMContentLoaded", () => {
           book.status === "tersedia" ||
           book.status === "Available";
 
-        const statusText = available ? "Tersedia" : "Tidak tersedia";
+        const statusText = available ? "Tersedia" : "Tidak Tersedia";
 
         return `
           <article class="book-card">
-            <h3>${escapeHtml(title)}</h3>
-
-            <p>
-              <strong>Penulis:</strong>
-              ${escapeHtml(author)}
-            </p>
-
+            <h3>${escapeHTML(title)}</h3>
+            <p><strong>Penulis:</strong> ${escapeHTML(author)}</p>
             <p>
               <strong>Status:</strong>
               <span class="${available ? "status-available" : "status-unavailable"}">
                 ${statusText}
               </span>
             </p>
-
             <button
               type="button"
               class="btn-borrow"
-              data-book-id="${escapeHtml(String(bookId))}"
+              data-book-id="${escapeHTML(String(bookId))}"
+              data-book-title="${escapeHTML(title)}"
               ${available ? "" : "disabled"}
             >
-              ${available ? "Pinjam Buku" : "Tidak Tersedia"}
+              ${available ? "Pinjam Buku" : "Sedang Dipinjam"}
             </button>
           </article>
         `;
@@ -342,12 +388,18 @@ document.addEventListener("DOMContentLoaded", () => {
       .join("");
 
     const borrowButtons = booksListContainer.querySelectorAll(".btn-borrow");
-
     borrowButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const bookId = button.dataset.bookId;
+        const bookTitle = button.dataset.bookTitle || "buku ini";
 
-        handleBorrowBook(bookId, button);
+        showConfirmModal(
+          "Peminjaman Buku",
+          `Apakah Anda yakin ingin meminjam "${bookTitle}"?`,
+          () => {
+            handleBorrowBook(bookId, button);
+          },
+        );
       });
     });
   }
@@ -361,7 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!getToken()) {
       showLogin();
-      showMessage("Silakan login terlebih dahulu.", "error");
+      showMessage("Silakan masuk terlebih dahulu.", "error");
       return;
     }
 
@@ -370,7 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       await createLoan(bookId);
-
       showMessage("Buku berhasil dipinjam.", "success");
 
       await loadBooks();
@@ -386,36 +437,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 9. MEMUAT RIWAYAT PEMINJAMAN
+  // 9. MEMUAT RIWAYAT PEMINJAMAN & BADGE
   // ==========================================
 
   async function loadUserLoans() {
     if (!getToken()) {
-      loansListContainer.innerHTML = `
-        <p class="info-text">
-          Silakan login untuk melihat riwayat peminjaman.
-        </p>
-      `;
+      loansListContainer.innerHTML = `<p class="info-text">Silakan masuk untuk melihat riwayat peminjaman.</p>`;
       return;
     }
 
-    loansListContainer.innerHTML = `
-      <p class="loading-text">Memuat riwayat peminjaman...</p>
-    `;
+    loansListContainer.innerHTML = `<p class="loading-text">Memuat riwayat peminjaman...</p>`;
 
     try {
       const loans = await getMyLoans();
+      allLoansCache = Array.isArray(loans) ? loans : [];
 
-      renderLoans(loans);
+      // Perbarui Counter Ringkasan
+      const activeCount = allLoansCache.filter(
+        (l) => (l.status || "").toLowerCase() === "active",
+      ).length;
+      const returnedCount = allLoansCache.length - activeCount;
+      updateCounterBadges(activeCount, returnedCount);
+
+      applyLoanFilterAndRender();
     } catch (error) {
-      loansListContainer.innerHTML = `
-        <p class="empty-text">
-          Gagal memuat riwayat peminjaman.
-        </p>
-      `;
-
+      loansListContainer.innerHTML = `<p class="info-text">Gagal memuat riwayat peminjaman.</p>`;
       showMessage(error.message || "Gagal memuat riwayat peminjaman.", "error");
     }
+  }
+
+  function updateCounterBadges(active, returned) {
+    if (countActiveEl) countActiveEl.textContent = active;
+    if (countReturnedEl) countReturnedEl.textContent = returned;
   }
 
   // ==========================================
@@ -425,59 +478,96 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderLoans(loans) {
     if (!Array.isArray(loans) || loans.length === 0) {
       loansListContainer.innerHTML = `
-        <p class="empty-text">
-          Belum ada riwayat peminjaman.
-        </p>
+        <div class="empty-state">
+          <p>Belum ada riwayat transaksi peminjaman pada kategori ini.</p>
+        </div>
       `;
       return;
     }
 
     loansListContainer.innerHTML = loans
       .map((loan) => {
+        const targetBookId = loan.book_id ?? loan.bookId ?? loan.book?.id;
+        const foundBook = allBooksCache.find(
+          (b) => String(b.id) === String(targetBookId),
+        );
+
         const bookTitle =
           loan.book_title ||
           loan.title ||
-          `Buku ID ${loan.book_id ?? loan.bookId ?? "-"}`;
+          loan.book?.title ||
+          (foundBook ? foundBook.title : null) ||
+          `Buku ID ${targetBookId ?? "-"}`;
 
-        const borrowDate = loan.borrow_date || loan.borrowDate || "-";
+        const formatDate = (dateStr) => {
+          if (!dateStr || dateStr === "-") return "-";
+          try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            });
+          } catch (e) {
+            return dateStr;
+          }
+        };
 
-        const dueDate = loan.due_date || loan.dueDate || "-";
+        const borrowDate = formatDate(loan.borrow_date || loan.borrowDate);
+        const rawDueDate = loan.due_date || loan.dueDate;
+        const dueDate = formatDate(rawDueDate);
+
+        const returnDateRaw =
+          loan.return_date || loan.returnDate || loan.returned_at;
+        const returnDate = returnDateRaw ? formatDate(returnDateRaw) : null;
 
         const status = loan.status || "Tidak diketahui";
-
         const isActive = status.toLowerCase() === "active";
+        const statusDisplay = isActive
+          ? "Aktif (Dipinjam)"
+          : "Sudah Dikembalikan";
+
+        // Deteksi Peringatan Due Date (< 2 Hari)
+        let isNearDue = false;
+        if (isActive && rawDueDate) {
+          const now = new Date();
+          const dueTime = new Date(rawDueDate);
+          const diffDays = (dueTime - now) / (1000 * 60 * 60 * 24);
+          if (diffDays >= 0 && diffDays <= 2) {
+            isNearDue = true;
+          }
+        }
+
+        const returnInfoHTML = !isActive
+          ? `<p><strong>Tanggal Dikembalikan:</strong> ${escapeHTML(String(returnDate || borrowDate))}</p>`
+          : "";
 
         const returnButton = isActive
           ? `
-          <button
-            type="button"
-            class="btn-return"
-            data-loan-id="${escapeHTML(String(loan.loanId ?? loan.id))}"
-          >
-            Kembalikan Buku
-          </button>
-          `
+            <button
+              type="button"
+              class="btn-return"
+              data-loan-id="${escapeHTML(String(loan.loanId ?? loan.id))}"
+              data-book-title="${escapeHTML(String(bookTitle))}"
+            >
+              Kembalikan Buku
+            </button>
+            `
+          : "";
+
+        const warningNotice = isNearDue
+          ? `<p class="badge badge-warning" style="margin-top: 6px;">⚠️ Batas waktu pengembalian kurang dari 2 hari!</p>`
           : "";
 
         return `
-          <article class="loan-card">
+          <article class="loan-card ${isNearDue ? "due-warning" : ""}">
             <h3>${escapeHTML(String(bookTitle))}</h3>
-
-            <p>
-              <strong>Tanggal Pinjam:</strong>
-              ${escapeHTML(String(borrowDate))}
-            </p>
-
-            <p>
-              <strong>Tenggat Pengembalian:</strong>
-              ${escapeHTML(String(dueDate))}
-            </p>
-
-            <p>
-              <strong>Status:</strong>
-              ${escapeHTML(String(status))}
-            </p>
-
+            <p><strong>Tanggal Pinjam:</strong> ${escapeHTML(String(borrowDate))}</p>
+            <p><strong>Batas Tenggat (Deadline):</strong> ${escapeHTML(String(dueDate))}</p>
+            ${returnInfoHTML}
+            <p><strong>Status:</strong> <span class="badge ${isNearDue ? "badge-warning" : ""}">${escapeHTML(String(statusDisplay))}</span></p>
+            ${warningNotice}
             ${returnButton}
           </article>
         `;
@@ -485,77 +575,104 @@ document.addEventListener("DOMContentLoaded", () => {
       .join("");
 
     const returnButtons = loansListContainer.querySelectorAll(".btn-return");
-
     returnButtons.forEach((button) => {
-      button.addEventListener("click", async () => {
+      button.addEventListener("click", () => {
         const loanId = button.dataset.loanId;
+        const bookTitle = button.dataset.bookTitle || "buku ini";
 
         if (!loanId) {
           showMessage("ID peminjaman tidak ditemukan.", "error");
           return;
         }
 
-        const confirmed = window.confirm(
-          "Apakah kamu yakin ingin mengembalikan buku ini?",
+        showConfirmModal(
+          "Pengembalian Buku",
+          `Apakah Anda yakin ingin mengembalikan "${bookTitle}" ke perpustakaan?`,
+          async () => {
+            button.disabled = true;
+            button.textContent = "Memproses...";
+
+            try {
+              await returnLoan(loanId);
+              showMessage("Buku berhasil dikembalikan.", "success");
+
+              await loadBooks();
+              await loadUserLoans();
+            } catch (error) {
+              showMessage(
+                error.message || "Gagal mengembalikan buku.",
+                "error",
+              );
+              if (button.isConnected) {
+                button.disabled = false;
+                button.textContent = "Kembalikan Buku";
+              }
+            }
+          },
         );
-
-        if (!confirmed) {
-          return;
-        }
-
-        button.disabled = true;
-        button.textContent = "Memproses...";
-
-        try {
-          await returnLoan(loanId);
-
-          showMessage("Buku berhasil dikembalikan.", "success");
-
-          await loadBooks();
-          await loadUserLoans();
-        } catch (error) {
-          showMessage(error.message || "Gagal mengembalikan buku.", "error");
-
-          if (button.isConnected) {
-            button.disabled = false;
-            button.textContent = "Kembalikan Buku";
-          }
-        }
       });
     });
   }
 
   // ==========================================
-  // 11. PESAN NOTIFIKASI
+  // 11. CUSTOM CONFIRMATION MODAL HELPER
   // ==========================================
 
+  function showConfirmModal(title, message, onConfirm) {
+    const modal = document.getElementById("custom-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalMsg = document.getElementById("modal-message");
+    const btnConfirm = document.getElementById("modal-btn-confirm");
+    const btnCancel = document.getElementById("modal-btn-cancel");
+
+    modalTitle.textContent = title;
+    modalMsg.textContent = message;
+    modal.classList.remove("hidden");
+
+    // Clone node untuk menghapus listener lama
+    const newConfirm = btnConfirm.cloneNode(true);
+    const newCancel = btnCancel.cloneNode(true);
+    btnConfirm.parentNode.replaceChild(newConfirm, btnConfirm);
+    btnCancel.parentNode.replaceChild(newCancel, btnCancel);
+
+    newConfirm.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      onConfirm();
+    });
+
+    newCancel.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+  }
+
+  // ==========================================
+  // 12. PESAN NOTIFIKASI DENGAN AUTO-CLOSE
+  // ==========================================
+
+  let messageTimer = null;
+
   function showMessage(message, type = "info") {
+    if (messageTimer) clearTimeout(messageTimer);
+
     messageContainer.textContent = message;
     messageContainer.className = `message-box ${type}`;
     messageContainer.classList.remove("hidden");
+
+    messageTimer = setTimeout(() => {
+      hideMessage();
+    }, 4000);
   }
 
   function hideMessage() {
+    if (messageTimer) clearTimeout(messageTimer);
     messageContainer.textContent = "";
     messageContainer.className = "message-box hidden";
   }
 
   // ==========================================
-  // 12. MENCEGAH HTML INJECTION
+  // 13. KEAMANAN & ESCAPE HTML
   // ==========================================
 
-  function escapeHtml(value) {
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  // ==========================================
-  // 13. escapeHTML (untuk keamanan tambahan)
-  // ==========================================
   function escapeHTML(str) {
     if (!str) return "";
     return String(str)

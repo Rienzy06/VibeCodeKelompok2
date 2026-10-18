@@ -63,7 +63,7 @@
         aria-live="polite"
       ></div>
 
-      <!-- Form login & register. ID dipertahankan agar cocok dengan app.js. -->
+      <!-- Form login & register -->
       <section
         id="login-section"
         class="login-layout"
@@ -313,6 +313,20 @@
               Masuk sebagai <strong id="current-username"></strong>
             </p>
           </div>
+
+          <!-- COUNTER BADGE RINGKASAN SIRKULASI -->
+          <div class="counter-summary" aria-label="Ringkasan Peminjaman">
+            <div class="counter-item">
+              <span class="counter-value" id="count-active">0</span>
+              <span class="counter-label">Sedang Dipinjam</span>
+            </div>
+            <div class="counter-divider"></div>
+            <div class="counter-item">
+              <span class="counter-value" id="count-returned">0</span>
+              <span class="counter-label">Dikembalikan</span>
+            </div>
+          </div>
+
           <button type="button" id="btn-logout" class="button-secondary">
             Keluar Sesi <span aria-hidden="true">↗</span>
           </button>
@@ -327,6 +341,16 @@
             <p class="section-aside">
               Pilih buku yang tersedia untuk peminjaman.
             </p>
+          </div>
+
+          <!-- INPUT LIVE SEARCH -->
+          <div class="search-container">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Cari berdasarkan judul buku atau penulis..."
+              autocomplete="off"
+            />
           </div>
 
           <div id="books-list" class="books-grid">
@@ -345,6 +369,19 @@
             </p>
           </div>
 
+          <!-- FILTER STATUS PEMINJAMAN (TAB FILTER) -->
+          <div class="loans-filter-bar">
+            <button type="button" class="filter-tab active" data-filter="all">
+              Semua Riwayat
+            </button>
+            <button type="button" class="filter-tab" data-filter="active">
+              Sedang Dipinjam (Aktif)
+            </button>
+            <button type="button" class="filter-tab" data-filter="returned">
+              Sudah Dikembalikan
+            </button>
+          </div>
+
           <div id="loans-list" class="loans-container">
             <p class="info-text">
               Riwayat transaksi peminjaman Anda akan ditampilkan di sini.
@@ -358,6 +395,29 @@
         <span>Sistem Informasi Peminjaman Buku</span>
       </footer>
     </main>
+
+    <!-- CUSTOM CONFIRMATION MODAL -->
+    <div
+      id="custom-modal"
+      class="modal-backdrop hidden"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modal-card">
+        <h3 id="modal-title">Konfirmasi Tindakan</h3>
+        <p id="modal-message">
+          Apakah Anda yakin ingin melanjutkan tindakan ini?
+        </p>
+        <div class="modal-actions">
+          <button type="button" id="modal-btn-cancel" class="button-secondary">
+            Batal
+          </button>
+          <button type="button" id="modal-btn-confirm" class="button">
+            Ya, Lanjutkan
+          </button>
+        </div>
+      </div>
+    </div>
 
     <script src="js/api.js"></script>
     <script src="js/app.js"></script>

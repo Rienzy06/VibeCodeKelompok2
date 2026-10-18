@@ -13,6 +13,9 @@
   --line-strong: #c7cec4;
   --danger: #8c3c35;
   --danger-bg: #f9eeeb;
+  --warning: #b36b00;
+  --warning-bg: #fdf6e7;
+  --warning-border: #f2d29b;
   --content-width: 1160px;
   --focus: 0 0 0 3px rgba(37, 75, 57, 0.17);
 }
@@ -137,6 +140,7 @@ a {
   border: 1px solid #d6e0d1;
   border-left: 3px solid var(--forest);
   font-size: 0.92rem;
+  transition: opacity 300ms ease;
 }
 .message-box.error,
 .message-box.danger,
@@ -273,18 +277,14 @@ a {
   font-weight: 680;
 }
 
-/* ==========================================
-   PASSWORD SHOW/HIDE TOGGLE STYLES
-   ================================---------- */
+/* Password Toggle & Search Group */
 .password-group {
   position: relative;
   width: 100%;
 }
-
 .password-group input {
   padding-right: 48px;
 }
-
 .toggle-password-btn {
   position: absolute;
   right: 0;
@@ -304,15 +304,21 @@ a {
     color 140ms ease,
     background-color 140ms ease;
 }
-
 .toggle-password-btn:hover {
   color: var(--forest-deep);
   background: var(--surface-soft);
 }
-
 .toggle-password-btn:focus-visible {
   outline: 2px solid var(--forest);
   outline-offset: -2px;
+}
+
+.search-container {
+  margin-bottom: 18px;
+}
+.search-container input {
+  min-height: 44px;
+  font-size: 0.91rem;
 }
 
 input[type="text"],
@@ -412,7 +418,7 @@ input[type="submit"]:disabled {
   font-size: 0.76rem;
 }
 
-/* Authenticated page */
+/* Authenticated Page */
 #app-section {
   display: grid;
   gap: 34px;
@@ -450,10 +456,12 @@ input[type="submit"]:disabled {
 .intro-index span {
   color: #a2aa9c;
 }
+
+/* Account Strip & Counter Summary */
 .account-strip {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   min-width: 0;
   padding: 17px 19px;
   background: var(--surface);
@@ -489,6 +497,40 @@ input[type="submit"]:disabled {
   color: var(--forest-deep);
   font-weight: 750;
 }
+
+.counter-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 16px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.counter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.counter-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--forest-deep);
+  line-height: 1.1;
+}
+.counter-label {
+  font-size: 0.7rem;
+  color: var(--forest-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.counter-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line-strong);
+}
+
 #btn-logout {
   flex: 0 0 auto;
 }
@@ -499,7 +541,7 @@ input[type="submit"]:disabled {
 }
 .button-secondary:hover {
   color: var(--forest-deep);
-  background: var(--forest-soft, #e8eee7);
+  background: var(--surface-soft);
   border-color: #bdcbbb;
 }
 
@@ -531,13 +573,42 @@ input[type="submit"]:disabled {
   font-size: 0.82rem;
   text-align: right;
 }
+
+/* Filter Tabs Riwayat Peminjaman */
+.loans-filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.filter-tab {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 0.81rem;
+  font-weight: 650;
+  color: var(--forest-muted);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+.filter-tab:hover {
+  background: var(--surface-soft);
+  color: var(--forest-deep);
+}
+.filter-tab.active {
+  color: #fffefa;
+  background: var(--forest);
+  border-color: var(--forest);
+}
+
 .books-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   align-items: stretch;
   gap: 14px;
 }
-.books-grid > :not(.loading-text) {
+.books-grid > :not(.loading-text):not(.empty-state) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -550,7 +621,7 @@ input[type="submit"]:disabled {
     border-color 140ms ease,
     background-color 140ms ease;
 }
-.books-grid > :not(.loading-text):hover {
+.books-grid > :not(.loading-text):not(.empty-state):hover {
   border-color: #aebdac;
   background: #fff;
 }
@@ -606,13 +677,14 @@ input[type="submit"]:disabled {
   font-weight: 700;
   line-height: 1.4;
 }
+
 .loans-container {
   display: grid;
   gap: 0;
   background: var(--surface);
   border: 1px solid var(--line);
 }
-.loans-container > :not(.info-text) {
+.loans-container > :not(.info-text):not(.empty-state) {
   min-width: 0;
   padding: 15px 18px;
   background: var(--surface);
@@ -634,14 +706,58 @@ input[type="submit"]:disabled {
   color: var(--muted);
   font-size: 0.88rem;
 }
+
+/* Warning Tenggat Pengembalian (Due Date < 2 Hari) */
+.loan-card.due-warning {
+  border-left: 4px solid var(--warning);
+  background: #fffdf9;
+}
+.badge-warning {
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+}
+
+/* Tombol Kembalikan Buku */
+.btn-return {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  color: #fffefa;
+  background: var(--forest);
+  border: 1px solid var(--forest);
+  border-radius: 2px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+.btn-return:hover {
+  background: var(--forest-deep);
+  border-color: var(--forest-deep);
+}
+.btn-return:disabled {
+  color: #737b72;
+  background: #eceee8;
+  border-color: #e0e3dc;
+  cursor: not-allowed;
+}
+
 .loading-text,
-.info-text {
+.info-text,
+.empty-state {
   margin: 0;
-  padding: 21px 16px;
+  padding: 32px 16px;
   color: var(--muted);
   text-align: center;
   background: transparent;
   font-size: 0.9rem;
+  grid-column: 1 / -1;
 }
 .loading-text::before {
   display: inline-block;
@@ -653,6 +769,46 @@ input[type="submit"]:disabled {
   border-radius: 50%;
   animation: pulse 1.3s ease-in-out infinite;
 }
+
+/* Modal Popup Confirmation Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(25, 55, 41, 0.45);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.modal-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 28px;
+  width: min(420px, 100%);
+  border-radius: 3px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+.modal-card h3 {
+  margin: 0 0 8px;
+  color: var(--forest-deep);
+  font-size: 1.25rem;
+  font-weight: 710;
+}
+.modal-card p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -789,8 +945,13 @@ a:hover {
   }
   .account-strip {
     align-items: flex-start;
-    gap: 11px;
+    flex-wrap: wrap;
+    gap: 12px;
     padding: 14px;
+  }
+  .counter-summary {
+    width: 100%;
+    justify-content: space-around;
   }
   .account-icon {
     flex-basis: 38px;
@@ -818,7 +979,7 @@ a:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
-  .books-grid > :not(.loading-text) {
+  .books-grid > :not(.loading-text):not(.empty-state) {
     padding: 9px;
   }
   .books-grid img {
@@ -846,12 +1007,6 @@ a:hover {
   }
   .books-grid img {
     height: 205px;
-  }
-  .account-strip {
-    flex-wrap: wrap;
-  }
-  #btn-logout {
-    margin-left: 49px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
