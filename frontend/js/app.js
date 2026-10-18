@@ -328,6 +328,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const status = loan.status || "Tidak diketahui";
 
+        const isActive = status.tolowerCase() === "active";
+
+        const returnButton = isActive
+        ? `
+          <button
+            type="button"
+            class="btn-return"
+            data-loan-id="${escapeHTML(String(loan.loanId ?? loan.id))}"
+          >
+            Kembalikan Buku
+          </button>
+          `
+          : "";
+        
         return `
           <article class="loan-card">
             <h3>${escapeHtml(String(bookTitle))}</h3>
@@ -346,10 +360,61 @@ document.addEventListener("DOMContentLoaded", () => {
               <strong>Status:</strong>
               ${escapeHtml(String(status))}
             </p>
+
+            <p>
+              <strong>Status:</strong>
+              ${escapeHtml(String(status))}
+            </p>
+
+            $(returnButton)
+            
           </article>
         `;
       })
       .join("");
+
+      const returnButtons = loansListContainer.querySelectorAll(".btn-return");
+
+    returnButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const loanId = button.dataset.loanId;
+
+        if (!loanId) {
+          showMessage("ID peminjaman tidak ditemukan.", "error");
+          return;
+        }
+
+        const confirmed = window.confirm(
+          "Apakah kamu yakin ingin mengembalikan buku ini?",
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Memproses...";
+
+        try {
+          await returnLoan(loanId);
+
+          showMessage("Buku berhasil dikembalikan.", "success");
+
+          await loadBooks();
+          await loadUserLoans();
+        } catch (error) {
+          showMessage(
+            error.message || "Gagal mengembalikan buku.",
+            "error",
+          );
+
+          if (button.isConnected) {
+            button.disabled = false;
+            button.textContent = "Kembalikan Buku";
+          }
+        }
+      });
+    });
   }
 
   // ==========================================
