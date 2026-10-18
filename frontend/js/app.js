@@ -419,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const status = loan.status || "Tidak diketahui";
 
-        const isActive = status.tolowerCase() === "active";
+        const isActive = status.toLowerCase() === "active";
 
         const returnButton = isActive
         ? `
@@ -435,30 +435,24 @@ document.addEventListener("DOMContentLoaded", () => {
         
         return `
           <article class="loan-card">
-            <h3>${escapeHtml(String(bookTitle))}</h3>
+            <h3>${escapeHTML(String(bookTitle))}</h3>
 
             <p>
               <strong>Tanggal Pinjam:</strong>
-              ${escapeHtml(String(borrowDate))}
+              ${escapeHTML(String(borrowDate))}
             </p>
 
             <p>
               <strong>Tenggat Pengembalian:</strong>
-              ${escapeHtml(String(dueDate))}
+              ${escapeHTML(String(dueDate))}
             </p>
 
             <p>
               <strong>Status:</strong>
-              ${escapeHtml(String(status))}
+              ${escapeHTML(String(status))}
             </p>
 
-            <p>
-              <strong>Status:</strong>
-              ${escapeHtml(String(status))}
-            </p>
-
-            $(returnButton)
-            
+            ${returnButton}
           </article>
         `;
       })
@@ -537,7 +531,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================
-  // 13. INISIALISASI APLIKASI
+  // 13. escapeHTML (untuk keamanan tambahan)
+  // ==========================================
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+  // ==========================================
+  // 14. INISIALISASI APLIKASI
   // ==========================================
 
   initializeApp();
