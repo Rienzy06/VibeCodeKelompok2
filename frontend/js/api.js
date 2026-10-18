@@ -339,3 +339,49 @@ async function getUserLoans(userId) {
     throw error;
   }
 }
+
+// ==========================================
+// 9. MENGEMBALIKAN BUKU
+// ==========================================
+
+async function returnLoan(loanId) {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("Silakan login terlebih dahulu.");
+  }
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/loans/${encodeURIComponent(loanId)}/return`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      },
+    );
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        clearToken();
+        throw new Error("Sesi login berakhir. Silakan login kembali.");
+      }
+
+      throw new Error(result.message || "Gagal mengembalikan buku.");
+    }
+
+    return result.data;
+  } catch (error) {
+    if (error.name === "TypeError") {
+      throw new Error(
+        "Gagal terhubung ke layanan. Pastikan Lumen Service sedang berjalan.",
+      );
+    }
+
+    throw error;
+  }
+}
