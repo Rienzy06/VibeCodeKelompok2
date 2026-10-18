@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#254b39" />
     <meta
       name="description"
-      content="Sistem peminjaman buku untuk mencari bacaan dan memantau riwayat peminjaman."
+      content="Portal perpustakaan digital untuk pencarian katalog dan pengelolaan riwayat peminjaman buku."
     />
-    <title>Sistem Peminjaman Buku</title>
+    <title>Portal Peminjaman Buku Digital</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
@@ -18,7 +18,7 @@
         <a
           class="brand"
           href="#main-content"
-          aria-label="Sistem Peminjaman Buku, halaman utama"
+          aria-label="Portal Peminjaman Buku, halaman utama"
         >
           <span class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" fill="none">
@@ -43,14 +43,14 @@
             </svg>
           </span>
           <span class="brand-copy">
-            <span class="brand-eyebrow">RUANG BACA DIGITAL</span>
-            <span class="brand-name">Sistem Peminjaman Buku</span>
+            <span class="brand-eyebrow">PERPUSTAKAAN DIGITAL</span>
+            <span class="brand-name">Layanan Pustaka</span>
           </span>
         </a>
 
         <div class="header-meta" aria-label="Jenis layanan">
           <span class="header-meta-dot" aria-hidden="true"></span>
-          <span>Katalog &amp; peminjaman</span>
+          <span>Katalog &amp; Sirkulasi</span>
         </div>
       </div>
     </header>
@@ -70,37 +70,41 @@
         aria-labelledby="login-page-title"
       >
         <div class="login-story">
-          <p class="eyebrow eyebrow-light">BACA. TEMUKAN. KEMBALI.</p>
-          <h2 id="login-page-title">Selalu ada cerita baru untuk ditemukan.</h2>
+          <p class="eyebrow eyebrow-light">JELAJAHI. PINJAM. KEMBALIKAN.</p>
+          <h2 id="login-page-title">
+            Akses referensi literatur dengan mudah dan terstruktur.
+          </h2>
           <p class="login-story-copy">
-            Masuk atau daftar untuk menjelajahi koleksi buku, mengajukan
-            peminjaman, dan melihat kembali bacaan yang pernah kamu pinjam.
+            Masuk ke akun Anda untuk menelusuri katalog koleksi buku, mengajukan
+            peminjaman mandiri, serta memantau riwayat transaksi sirkulasi.
           </p>
 
           <div class="login-notes" aria-label="Fitur layanan">
             <div class="login-note">
               <span class="note-number">01</span>
-              <span>Jelajahi koleksi buku</span>
+              <span>Eksplorasi Katalog Buku</span>
             </div>
             <div class="login-note">
               <span class="note-number">02</span>
-              <span>Pinjam buku dengan mudah</span>
+              <span>Sirkulasi Peminjaman Efisien</span>
             </div>
             <div class="login-note">
               <span class="note-number">03</span>
-              <span>Pantau riwayat peminjaman</span>
+              <span>Monitoring Riwayat Aktif</span>
             </div>
           </div>
-          <span class="story-edition">EDISI DIGITAL <span>—</span> 01</span>
+          <span class="story-edition"
+            >SISTEM LAYANAN MANDIRI <span>—</span> v1.0</span
+          >
         </div>
 
         <div class="login-card" id="login-card-wrapper">
           <!-- KARTU LOGIN -->
           <div id="login-form-container">
             <div class="login-card-heading">
-              <p class="eyebrow">AKUN PENGGUNA</p>
-              <h3>Selamat datang kembali.</h3>
-              <p>Gunakan akun yang sudah terdaftar untuk melanjutkan.</p>
+              <p class="eyebrow">AUTENTIKASI AKUN</p>
+              <h3>Masuk ke Sistem.</h3>
+              <p>Masukkan kredensial akun terdaftar Anda.</p>
             </div>
 
             <form id="login-form">
@@ -118,18 +122,42 @@
 
               <div class="form-group">
                 <label for="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Masukkan password"
-                  autocomplete="current-password"
-                  required
-                />
+                <div class="password-group">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Masukkan password"
+                    autocomplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password-btn"
+                    aria-label="Tampilkan password"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                      ></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               <button type="submit" id="btn-login">
-                <span>Masuk ke akun</span>
+                <span>Masuk ke Sistem</span>
                 <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
                   <path
                     d="M4 10h11M10 5l5 5-5 5"
@@ -145,22 +173,22 @@
               class="login-footnote"
               style="margin-top: 15px; text-align: center"
             >
-              Belum punya akun?
+              Belum memiliki akun?
               <a
                 href="#"
                 id="link-to-register"
                 style="font-weight: bold; text-decoration: underline"
-                >Daftar sekarang</a
+                >Registrasi di sini</a
               >
             </p>
           </div>
 
-          <!-- KARTU REGISTER (BARU) -->
+          <!-- KARTU REGISTER -->
           <div id="register-form-container" class="hidden">
             <div class="login-card-heading">
-              <p class="eyebrow">PENDAFTARAN AKUN</p>
-              <h3>Buat akun baru.</h3>
-              <p>Daftar agar bisa langsung menggunakan sistem.</p>
+              <p class="eyebrow">REGISTRASI ANGGOTA</p>
+              <h3>Pendaftaran Akun Baru.</h3>
+              <p>Lengkapi data di bawah ini untuk membuat akun.</p>
             </div>
 
             <form id="register-form">
@@ -178,18 +206,42 @@
 
               <div class="form-group">
                 <label for="reg-password">Password</label>
-                <input
-                  type="password"
-                  id="reg-password"
-                  name="password"
-                  placeholder="Minimal 6 karakter"
-                  autocomplete="new-password"
-                  required
-                />
+                <div class="password-group">
+                  <input
+                    type="password"
+                    id="reg-password"
+                    name="password"
+                    placeholder="Minimal 6 karakter"
+                    autocomplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password-btn"
+                    aria-label="Tampilkan password"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                      ></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               <button type="submit" id="btn-register">
-                <span>Daftar Akun</span>
+                <span>Buat Akun Baru</span>
                 <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
                   <path
                     d="M4 10h11M10 5l5 5-5 5"
@@ -205,19 +257,19 @@
               class="login-footnote"
               style="margin-top: 15px; text-align: center"
             >
-              Sudah punya akun?
+              Sudah terdaftar?
               <a
                 href="#"
                 id="link-to-login"
                 style="font-weight: bold; text-decoration: underline"
-                >Masuk di sini</a
+                >Masuk ke sistem</a
               >
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Aplikasi setelah login. ID utama dan ID anak dipertahankan untuk app.js. -->
+      <!-- Aplikasi setelah login -->
       <section
         id="app-section"
         class="hidden"
@@ -225,10 +277,11 @@
       >
         <div class="page-intro">
           <div>
-            <p class="eyebrow">RUANG BACA / BERANDA</p>
-            <h2>Temukan bacaan berikutnya.</h2>
+            <p class="eyebrow">DASHBOARD / KATALOG</p>
+            <h2>Katalog Koleksi Pustaka.</h2>
             <p class="page-intro-copy">
-              Jelajahi koleksi yang tersedia dan kelola peminjamanmu di sini.
+              Telusuri ketersediaan buku dan kelola daftar peminjaman aktif
+              Anda.
             </p>
           </div>
           <span class="intro-index" aria-hidden="true"
@@ -255,52 +308,54 @@
             </svg>
           </div>
           <div class="account-copy">
-            <p class="eyebrow" id="account-title">AKUN AKTIF</p>
+            <p class="eyebrow" id="account-title">SESI AKTIF</p>
             <p class="account-name-line">
-              Login sebagai <strong id="current-username"></strong>
+              Masuk sebagai <strong id="current-username"></strong>
             </p>
           </div>
           <button type="button" id="btn-logout" class="button-secondary">
-            Keluar <span aria-hidden="true">↗</span>
+            Keluar Sesi <span aria-hidden="true">↗</span>
           </button>
         </section>
 
         <section class="books-section" aria-labelledby="books-title">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">PILIHAN KOLEKSI</p>
-              <h2 id="books-title">Daftar buku</h2>
+              <p class="eyebrow">KATALOG BUKU</p>
+              <h2 id="books-title">Daftar Koleksi Pustaka</h2>
             </div>
-            <p class="section-aside">Temukan buku yang ingin kamu baca.</p>
+            <p class="section-aside">
+              Pilih buku yang tersedia untuk peminjaman.
+            </p>
           </div>
 
           <div id="books-list" class="books-grid">
-            <p class="loading-text">Memuat daftar buku...</p>
+            <p class="loading-text">Memuat data katalog buku...</p>
           </div>
         </section>
 
         <section class="loans-section" aria-labelledby="loans-title">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">AKTIVITAS AKUN</p>
-              <h2 id="loans-title">Riwayat peminjaman</h2>
+              <p class="eyebrow">SIRKULASI &amp; RIWAYAT</p>
+              <h2 id="loans-title">Riwayat Peminjaman Buku</h2>
             </div>
             <p class="section-aside">
-              Pantau buku yang pernah atau sedang dipinjam.
+              Daftar peminjaman aktif dan riwayat transaksi perpustakaan.
             </p>
           </div>
 
           <div id="loans-list" class="loans-container">
             <p class="info-text">
-              Riwayat peminjaman akan ditampilkan di sini.
+              Riwayat transaksi peminjaman Anda akan ditampilkan di sini.
             </p>
           </div>
         </section>
       </section>
 
       <footer class="site-footer">
-        <span>RUANG BACA DIGITAL</span>
-        <span>Sistem Peminjaman Buku</span>
+        <span>PORTAL PERPUSTAKAAN DIGITAL</span>
+        <span>Sistem Informasi Peminjaman Buku</span>
       </footer>
     </main>
 

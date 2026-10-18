@@ -147,7 +147,6 @@ a {
   border-left-color: var(--danger);
 }
 
-/* Login: editorial split layout with a restrained, functional form. */
 .login-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.78fr);
@@ -256,7 +255,8 @@ a {
   color: var(--muted);
   font-size: 0.91rem;
 }
-#login-form, #register-form {
+#login-form,
+#register-form {
   display: grid;
   gap: 19px;
 }
@@ -272,6 +272,49 @@ a {
   font-size: 0.84rem;
   font-weight: 680;
 }
+
+/* ==========================================
+   PASSWORD SHOW/HIDE TOGGLE STYLES
+   ================================---------- */
+.password-group {
+  position: relative;
+  width: 100%;
+}
+
+.password-group input {
+  padding-right: 48px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  background: transparent;
+  border: none;
+  border-radius: 0 2px 2px 0;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
+}
+
+.toggle-password-btn:hover {
+  color: var(--forest-deep);
+  background: var(--surface-soft);
+}
+
+.toggle-password-btn:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: -2px;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -350,12 +393,14 @@ input[type="submit"]:disabled {
   border-color: #e0e3dc;
   cursor: not-allowed;
 }
-#btn-login, #btn-register {
+#btn-login,
+#btn-register {
   width: 100%;
   min-height: 49px;
   margin-top: 5px;
 }
-#btn-login svg, #btn-register svg {
+#btn-login svg,
+#btn-register svg {
   width: 18px;
   height: 18px;
 }
