@@ -123,4 +123,62 @@ class LoanController extends Controller
             'data' => $loan,
         ], 201);
     }
+     /**
+     * Mengembalikan buku yang sedang dipinjam.
+     */
+    public function returnBook(Request $request, $id)
+    {
+        $userId = $request->attributes->get('authenticated_user_id');
+
+        if (!$userId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Silakan login terlebih dahulu.',
+            ], 401);
+        }
+
+        $loan = Loan::where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$loan) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data peminjaman tidak ditemukan.',
+            ], 404);
+        }
+
+        if ($loan->status !== 'active') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Buku sudah dikembalikan atau tidak sedang dipinjam.',
+            ], 400);
+        }
+
+        $book = Book::find($loan->book_id);
+
+        if (!$book) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data buku tidak ditemukan.',
+            ], 404);
+        }
+
+        DB::transaction(function () use ($loan, $book) {
+            $loan->update([
+                'status' => 'returned',
+            ]);
+
+            $book->update([
+                'status' => 'available',
+            ]);
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Buku berhasil dikembalikan.',
+            'data' => $loan->fresh(),
+        ], 200);
+    }
+}
 }
