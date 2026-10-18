@@ -257,12 +257,3 @@ buat cadangan sebelum menjalankan perubahan database yang berisiko;
 tinjau setiap perubahan kode sebelum dimasukkan ke branch utama.
 12. Kesimpulan
 Gemini dan ChatGPT dapat membantu proses pengembangan melalui penjelasan teknis, analisis, review, perancangan pengujian, dan penyusunan dokumentasi. Namun, kualitas hasil akhir ditentukan oleh verifikasi anggota tim terhadap sumber proyek dan perilaku aplikasi yang sebenarnya. Dokumentasi ini menjadi catatan transparansi penggunaan AI dan harus mencerminkan aktivitas, keputusan, serta bukti yang benar-benar tersedia.
-
-13. Catatan untuk Laporan
-Untuk laporan akademik, gunakan dokumen ini sebagai penjelasan proses penggunaan AI. Lampirkan bukti yang tersedia, misalnya tangkapan layar prompt dan respons, hasil request API, hasil pengujian, atau commit Git. Jangan menganggap tabel prompt yang disediakan di dokumen ini sebagai bukti historis bahwa semua prompt tersebut pernah digunakan.
-
-Jika prompt di Bagian 6 digunakan selama proses review, catat tanggal, alat, ringkasan hasil, keputusan tim, dan bukti yang sesuai pada Bagian 8. Jika prompt hanya disiapkan sebagai template, nyatakan sebagai template.
-
-14. Riwayat Dokumen
-Versi	Keterangan
-Final	Dokumentasi penggunaan Gemini dan ChatGPT untuk mendukung proses analisis, review, pengujian, dan dokumentasi proyek.
