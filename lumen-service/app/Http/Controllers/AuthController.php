@@ -11,6 +11,52 @@ use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     /**
+     * Pendaftaran pengguna baru.
+     */
+    public function register(Request $request)
+    {
+        $username = $request->input('username');
+        $password = $request->input('password');
+
+        // Validasi input
+        if (
+            !is_string($username) ||
+            trim($username) === '' ||
+            !is_string($password) ||
+            strlen($password) < 6
+        ) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Username wajib diisi dan password minimal 6 karakter.',
+            ], 400);
+        }
+
+        // Cek apakah username sudah terdaftar
+        $existingUser = User::where('username', trim($username))->first();
+        if ($existingUser) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Username sudah digunakan, silakan pilih yang lain.',
+            ], 422);
+        }
+
+        // Simpan user baru ke database dengan password yang di-hash
+        $user = User::create([
+            'username' => trim($username),
+            'password' => Hash::make($password),
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Registrasi berhasil. Silakan login.',
+            'data' => [
+                'id' => $user->id,
+                'username' => $user->username,
+            ],
+        ], 201);
+    }
+
+    /**
      * Login pengguna dan menghasilkan token autentikasi.
      */
     public function login(Request $request)

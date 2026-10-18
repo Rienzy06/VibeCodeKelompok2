@@ -63,7 +63,7 @@
         aria-live="polite"
       ></div>
 
-      <!-- Form login. ID dipertahankan agar tetap cocok dengan app.js. -->
+      <!-- Form login & register. ID dipertahankan agar cocok dengan app.js. -->
       <section
         id="login-section"
         class="login-layout"
@@ -73,8 +73,8 @@
           <p class="eyebrow eyebrow-light">BACA. TEMUKAN. KEMBALI.</p>
           <h2 id="login-page-title">Selalu ada cerita baru untuk ditemukan.</h2>
           <p class="login-story-copy">
-            Masuk untuk menjelajahi koleksi buku, mengajukan peminjaman, dan
-            melihat kembali bacaan yang pernah kamu pinjam.
+            Masuk atau daftar untuk menjelajahi koleksi buku, mengajukan
+            peminjaman, dan melihat kembali bacaan yang pernah kamu pinjam.
           </p>
 
           <div class="login-notes" aria-label="Fitur layanan">
@@ -94,54 +94,126 @@
           <span class="story-edition">EDISI DIGITAL <span>—</span> 01</span>
         </div>
 
-        <div class="login-card">
-          <div class="login-card-heading">
-            <p class="eyebrow">AKUN PENGGUNA</p>
-            <h3>Selamat datang kembali.</h3>
-            <p>Gunakan akun yang sudah terdaftar untuk melanjutkan.</p>
+        <div class="login-card" id="login-card-wrapper">
+          <!-- KARTU LOGIN -->
+          <div id="login-form-container">
+            <div class="login-card-heading">
+              <p class="eyebrow">AKUN PENGGUNA</p>
+              <h3>Selamat datang kembali.</h3>
+              <p>Gunakan akun yang sudah terdaftar untuk melanjutkan.</p>
+            </div>
+
+            <form id="login-form">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Masukkan username"
+                  autocomplete="username"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Masukkan password"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+
+              <button type="submit" id="btn-login">
+                <span>Masuk ke akun</span>
+                <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M4 10h11M10 5l5 5-5 5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </form>
+            <p
+              class="login-footnote"
+              style="margin-top: 15px; text-align: center"
+            >
+              Belum punya akun?
+              <a
+                href="#"
+                id="link-to-register"
+                style="font-weight: bold; text-decoration: underline"
+                >Daftar sekarang</a
+              >
+            </p>
           </div>
 
-          <form id="login-form">
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                placeholder="Masukkan username"
-                autocomplete="username"
-                required
-              />
+          <!-- KARTU REGISTER (BARU) -->
+          <div id="register-form-container" class="hidden">
+            <div class="login-card-heading">
+              <p class="eyebrow">PENDAFTARAN AKUN</p>
+              <h3>Buat akun baru.</h3>
+              <p>Daftar agar bisa langsung menggunakan sistem.</p>
             </div>
 
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Masukkan password"
-                autocomplete="current-password"
-                required
-              />
-            </div>
-
-            <button type="submit" id="btn-login">
-              <span>Masuk ke akun</span>
-              <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M4 10h11M10 5l5 5-5 5"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+            <form id="register-form">
+              <div class="form-group">
+                <label for="reg-username">Username</label>
+                <input
+                  type="text"
+                  id="reg-username"
+                  name="username"
+                  placeholder="Pilih username"
+                  autocomplete="username"
+                  required
                 />
-              </svg>
-            </button>
-          </form>
-          <p class="login-footnote">
-            Akses layanan perpustakaan dalam satu tempat.
-          </p>
+              </div>
+
+              <div class="form-group">
+                <label for="reg-password">Password</label>
+                <input
+                  type="password"
+                  id="reg-password"
+                  name="password"
+                  placeholder="Minimal 6 karakter"
+                  autocomplete="new-password"
+                  required
+                />
+              </div>
+
+              <button type="submit" id="btn-register">
+                <span>Daftar Akun</span>
+                <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M4 10h11M10 5l5 5-5 5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </form>
+            <p
+              class="login-footnote"
+              style="margin-top: 15px; text-align: center"
+            >
+              Sudah punya akun?
+              <a
+                href="#"
+                id="link-to-login"
+                style="font-weight: bold; text-decoration: underline"
+                >Masuk di sini</a
+              >
+            </p>
+          </div>
         </div>
       </section>
 

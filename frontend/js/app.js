@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const messageContainer = document.getElementById("message-container");
 
-  // Elemen autentikasi
+  // Elemen autentikasi (Login & Register)
   const loginSection = document.getElementById("login-section");
   const appSection = document.getElementById("app-section");
   const loginForm = document.getElementById("login-form");
@@ -15,9 +15,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnLogout = document.getElementById("btn-logout");
   const currentUsername = document.getElementById("current-username");
 
+  // Elemen Form Register & Navigasi Toggle
+  const loginCardWrapper = document.getElementById("login-card-wrapper");
+  const loginFormContainer = document.getElementById("login-form-container");
+  const registerFormContainer = document.getElementById(
+    "register-form-container",
+  );
+  const registerForm = document.getElementById("register-form");
+  const regUsernameInput = document.getElementById("reg-username");
+  const regPasswordInput = document.getElementById("reg-password");
+  const btnRegister = document.getElementById("btn-register");
+  const linkToRegister = document.getElementById("link-to-register");
+  const linkToLogin = document.getElementById("link-to-login");
+
   // Elemen buku dan peminjaman
   const booksListContainer = document.getElementById("books-list");
   const loansListContainer = document.getElementById("loans-list");
+
+  // ==========================================
+  // 1.1. TOGGLE LOGIN <-> REGISTER
+  // ==========================================
+
+  if (linkToRegister && linkToLogin) {
+    linkToRegister.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideMessage();
+      loginFormContainer.classList.add("hidden");
+      registerFormContainer.classList.remove("hidden");
+    });
+
+    linkToLogin.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideMessage();
+      registerFormContainer.classList.add("hidden");
+      loginFormContainer.classList.remove("hidden");
+    });
+  }
 
   // ==========================================
   // 2. TAMPILAN LOGIN DAN APLIKASI
@@ -26,6 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function showLogin() {
     loginSection.classList.remove("hidden");
     appSection.classList.add("hidden");
+    // Pastikan kembali ke form login saat keluar/sesi habis
+    if (registerFormContainer && loginFormContainer) {
+      registerFormContainer.classList.add("hidden");
+      loginFormContainer.classList.remove("hidden");
+    }
   }
 
   function showApp(username) {
@@ -79,6 +117,65 @@ document.addEventListener("DOMContentLoaded", () => {
       btnLogin.textContent = "Login";
     }
   });
+
+  // ==========================================
+  // 3.1. REGISTER (BARU)
+  // ==========================================
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      hideMessage();
+
+      const username = regUsernameInput.value.trim();
+      const password = regPasswordInput.value;
+
+      if (!username || !password) {
+        showMessage("Username dan password wajib diisi.", "error");
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage("Password minimal harus 6 karakter.", "error");
+        return;
+      }
+
+      btnRegister.disabled = true;
+      btnRegister.textContent = "Memproses...";
+
+      try {
+        const response = await fetch("http://localhost:8000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === "success") {
+          showMessage(
+            result.message || "Registrasi berhasil. Silakan login.",
+            "success",
+          );
+          registerForm.reset();
+
+          // Pindahkan kembali tampilan ke form login
+          registerFormContainer.classList.add("hidden");
+          loginFormContainer.classList.remove("hidden");
+        } else {
+          throw new Error(result.message || "Gagal melakukan registrasi.");
+        }
+      } catch (error) {
+        showMessage(error.message || "Terjadi kesalahan pada server.", "error");
+      } finally {
+        btnRegister.disabled = false;
+        btnRegister.textContent = "Daftar Akun";
+      }
+    });
+  }
 
   // ==========================================
   // 4. LOGOUT
@@ -244,8 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
     buttonElement.textContent = "Memproses...";
 
     try {
-      // User ID tidak dikirim dari frontend.
-      // Identitas pengguna ditentukan oleh backend melalui token.
       await createLoan(bookId);
 
       showMessage("Buku berhasil dipinjam.", "success");
@@ -283,10 +378,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     try {
-      /*
-       * Fungsi getMyLoans() harus tersedia di api.js
-       * dan mengambil riwayat berdasarkan pengguna yang login.
-       */
       const loans = await getMyLoans();
 
       renderLoans(loans);

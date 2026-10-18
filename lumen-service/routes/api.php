@@ -6,8 +6,9 @@
 // AUTENTIKASI
 // ==========================================
 
-// Login tidak memerlukan token
+// Login tidak memerlukan token dan Register
 $router->post('/login', 'AuthController@login');
+$router->post('/register', 'AuthController@register');
 
 // Endpoint yang memerlukan autentikasi
 $router->group(['middleware' => 'auth.token'], function () use ($router) {

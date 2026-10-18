@@ -256,7 +256,7 @@ a {
   color: var(--muted);
   font-size: 0.91rem;
 }
-#login-form {
+#login-form, #register-form {
   display: grid;
   gap: 19px;
 }
@@ -350,12 +350,12 @@ input[type="submit"]:disabled {
   border-color: #e0e3dc;
   cursor: not-allowed;
 }
-#btn-login {
+#btn-login, #btn-register {
   width: 100%;
   min-height: 49px;
   margin-top: 5px;
 }
-#btn-login svg {
+#btn-login svg, #btn-register svg {
   width: 18px;
   height: 18px;
 }
